@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Exact Differential Equation Checker</title>
+
+    <!-- Math.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f6f9;
+            padding: 30px;
+        }
+        .container {
+            width: 500px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px #aaa;
+        }
+        input, button {
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+        }
+        button {
+            background: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Exact Differential Equation Checker</h2>
+
+    <label>Enter M(x, y):</label>
+    <input type="text" id="M" placeholder="e.g. x*y + y">
+
+    <label>Enter N(x, y):</label>
+    <input type="text" id="N" placeholder="e.g. x*x + x">
+
+    <button onclick="checkExactness()">Check Exactness</button>
+
+    <div class="result" id="output"></div>
+</div>
+
+<script>
+function checkExactness() {
+    let M = document.getElementById("M").value;
+    let N = document.getElementById("N").value;
+
+    try {
+        let dM_dy = math.derivative(M, 'y').toString();
+        let dN_dx = math.derivative(N, 'x').toString();
+
+        if (math.simplify(dM_dy + " - (" + dN_dx + ")").toString() === "0") {
+            document.getElementById("output").innerHTML =
+                "✔ The equation is <span style='color:green'>EXACT</span><br>" +
+                "∂M/∂y = " + dM_dy + "<br>" +
+                "∂N/∂x = " + dN_dx;
+        } else {
+            document.getElementById("output").innerHTML =
+                "✘ The equation is <span style='color:red'>NOT EXACT</span><br>" +
+                "∂M/∂y = " + dM_dy + "<br>" +
+                "∂N/∂x = " + dN_dx;
+        }
+    } catch (error) {
+        document.getElementById("output").innerHTML =
+            "<span style='color:red'>Invalid input. Please enter valid expressions.</span>";
+    }
+}
+</script>
+
+</body>
+</html>
