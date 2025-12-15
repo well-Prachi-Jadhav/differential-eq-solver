@@ -1,88 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Exact Differential Equation Checker</title>
+<meta charset="UTF-8">
+<title>Exact Differential Equation Solver</title>
 
-    <!-- Math.js Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
+<!-- Math.js Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
 
-    <style>
-        body {
-            font-family: Arial;
-            background: #f4f6f9;
-            padding: 30px;
-        }
-        .container {
-            width: 500px;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px #aaa;
-        }
-        input, button {
-            width: 100%;
-            padding: 8px;
-            margin-top: 10px;
-        }
-        button {
-            background: #007BFF;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #0056b3;
-        }
-        .result {
-            margin-top: 15px;
-            font-weight: bold;
-        }
-    </style>
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+    }
+
+    .container {
+        background: rgba(255,255,255,0.15);
+        padding: 30px;
+        border-radius: 15px;
+        width: 500px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        backdrop-filter: blur(10px);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: bold;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0 20px;
+        border-radius: 8px;
+        border: none;
+        outline: none;
+        font-size: 16px;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        background: #00d4ff;
+        border: none;
+        border-radius: 10px;
+        font-size: 18px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    button:hover {
+        background: #00b4d8;
+    }
+
+    .result {
+        margin-top: 20px;
+        background: rgba(0,0,0,0.25);
+        padding: 15px;
+        border-radius: 10px;
+        font-size: 16px;
+        line-height: 1.6;
+    }
+
+    .exact {
+        color: #00ffcc;
+        font-weight: bold;
+    }
+
+    .not-exact {
+        color: #ffcccb;
+        font-weight: bold;
+    }
+</style>
 </head>
 
 <body>
 
 <div class="container">
-    <h2>Exact Differential Equation Checker</h2>
+    <h1>Exact DE Solver</h1>
 
-    <label>Enter M(x, y):</label>
-    <input type="text" id="M" placeholder="e.g. x*y + y">
+    <label>Enter M(x,y):</label>
+    <input type="text" id="M" placeholder="Example: 2*x*y + y">
 
-    <label>Enter N(x, y):</label>
-    <input type="text" id="N" placeholder="e.g. x*x + x">
+    <label>Enter N(x,y):</label>
+    <input type="text" id="N" placeholder="Example: x^2 + x">
 
-    <button onclick="checkExactness()">Check Exactness</button>
+    <button onclick="solve()">Check & Solve</button>
 
     <div class="result" id="output"></div>
 </div>
 
 <script>
-function checkExactness() {
-    let M = document.getElementById("M").value;
-    let N = document.getElementById("N").value;
-
+function solve() {
     try {
-        let dM_dy = math.derivative(M, 'y').toString();
-        let dN_dx = math.derivative(N, 'x').toString();
+        const M = document.getElementById("M").value;
+        const N = document.getElementById("N").value;
 
-        if (math.simplify(dM_dy + " - (" + dN_dx + ")").toString() === "0") {
-            document.getElementById("output").innerHTML =
-                "✔ The equation is <span style='color:green'>EXACT</span><br>" +
-                "∂M/∂y = " + dM_dy + "<br>" +
-                "∂N/∂x = " + dN_dx;
+        const dM_dy = math.derivative(M, 'y').toString();
+        const dN_dx = math.derivative(N, 'x').toString();
+
+        let output = `
+        <p>∂M/∂y = <b>${dM_dy}</b></p>
+        <p>∂N/∂x = <b>${dN_dx}</b></p>
+        `;
+
+        if (math.simplify(dM_dy).equals(math.simplify(dN_dx))) {
+            output += `<p class="exact">✔ Differential Equation is EXACT</p>`;
+
+            // Integrate M w.r.t x
+            const phi = math.integral(M, 'x').toString();
+
+            output += `
+            <p><b>Integrating M w.r.t x:</b></p>
+            <p>φ(x,y) = ${phi} + g(y)</p>
+            <p><b>General Solution:</b></p>
+            <p>${phi} = C</p>
+            `;
         } else {
-            document.getElementById("output").innerHTML =
-                "✘ The equation is <span style='color:red'>NOT EXACT</span><br>" +
-                "∂M/∂y = " + dM_dy + "<br>" +
-                "∂N/∂x = " + dN_dx;
+            output += `<p class="not-exact">✖ Differential Equation is NOT EXACT</p>`;
         }
-    } catch (error) {
+
+        document.getElementById("output").innerHTML = output;
+    }
+    catch (err) {
         document.getElementById("output").innerHTML =
-            "<span style='color:red'>Invalid input. Please enter valid expressions.</span>";
+        "<p class='not-exact'>Invalid expression. Please check inputs.</p>";
     }
 }
 </script>
 
 </body>
 </html>
+
+</body>
+</html>
+
