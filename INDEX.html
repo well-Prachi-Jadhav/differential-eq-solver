@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Virtual Lab – Exact Differential Equations | PCCOE</title>
+
+<!-- Math.js for symbolic differentiation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
+
+<style>
+    body{
+        margin:0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        background:#f4f6f9;
+        color:#333;
+    }
+    header{
+        background:#0a3d62;
+        color:#fff;
+        padding:15px 30px;
+        display:flex;
+        align-items:center;
+        gap:20px;
+    }
+    header img{
+        height:70px;
+    }
+    header h1{
+        font-size:26px;
+        margin:0;
+    }
+    nav{
+        background:#1e5f8b;
+        display:flex;
+        flex-wrap:wrap;
+    }
+    nav button{
+        flex:1;
+        padding:12px;
+        background:none;
+        border:none;
+        color:#fff;
+        cursor:pointer;
+        font-size:15px;
+    }
+    nav button:hover, nav button.active{
+        background:#144a6b;
+    }
+    section{
+        display:none;
+        padding:25px 40px;
+        background:#fff;
+        margin:20px;
+        border-radius:8px;
+        box-shadow:0 2px 8px rgba(0,0,0,0.1);
+    }
+    section.active{
+        display:block;
+    }
+    h2{
+        color:#0a3d62;
+        margin-top:0;
+    }
+    .simulation input{
+        padding:8px;
+        width:250px;
+        margin:5px 0;
+    }
+    .simulation button{
+        padding:10px 18px;
+        background:#0a3d62;
+        color:#fff;
+        border:none;
+        cursor:pointer;
+        border-radius:4px;
+        margin-top:10px;
+    }
+    .result{
+        margin-top:15px;
+        font-weight:bold;
+    }
+    footer{
+        background:#0a3d62;
+        color:#fff;
+        text-align:center;
+        padding:12px;
+        margin-top:30px;
+    }
+</style>
+</head>
+
+<body>
+
+<header>
+    <img src="PCCOE-Logo-24.png" alt="PCCOE Logo">
+    <h1>Virtual Mathematics Laboratory – Exact Differential Equations</h1>
+</header>
+
+<nav>
+    <button class="active" onclick="showTab('aim')">Aim</button>
+    <button onclick="showTab('theory')">Theory</button>
+    <button onclick="showTab('pretest')">Pre-Test</button>
+    <button onclick="showTab('procedure')">Procedure</button>
+    <button onclick="showTab('simulation')">Simulation</button>
+    <button onclick="showTab('posttest')">Post-Test</button>
+    <button onclick="showTab('references')">References</button>
+    <button onclick="showTab('contributors')">Contributors</button>
+</nav>
+
+<section id="aim" class="active">
+    <h2>Aim</h2>
+    <p>
+        To study the concept of exact and non-exact differential equations and to
+        develop an interactive virtual laboratory that determines the exactness
+        of a given first-order differential equation of the form
+        M(x,y)dx + N(x,y)dy = 0. The experiment also aims to help students
+        understand the role of integrating factors and the systematic procedure
+        for obtaining the general solution.
+    </p>
+</section>
+
+<section id="theory">
+    <h2>Theory</h2>
+    <p>
+        A first-order differential equation of the form M(x,y)dx + N(x,y)dy = 0
+        is said to be an <b>exact differential equation</b> if there exists a
+        scalar function F(x,y) such that dF = Mdx + Ndy. This implies that
+        M = ∂F/∂x and N = ∂F/∂y. A necessary and sufficient condition for
+        exactness is that the mixed partial derivatives are equal, i.e.,
+        ∂M/∂y = ∂N/∂x, provided the functions are continuous in the given region.
+    </p>
+    <p>
+        If the given equation is exact, the solution can be obtained by
+        integrating M with respect to x (treating y as constant) to obtain F,
+        and then determining the remaining function of y by comparing with N.
+        The final solution is expressed implicitly as F(x,y) = C.
+    </p>
+    <p>
+        Many practical differential equations are not exact in their original
+        form. In such cases, an <b>integrating factor</b> μ may be introduced to
+        convert the equation into an exact one. If
+        (∂M/∂y − ∂N/∂x)/N is a function of x alone, then an integrating factor
+        μ(x) exists. Similarly, if
+        (∂N/∂x − ∂M/∂y)/M is a function of y alone, then μ(y) exists. Multiplying
+        the original equation by the appropriate integrating factor transforms
+        it into an exact equation, which can then be solved using the standard
+        procedure. Exact differential equations appear frequently in
+        thermodynamics, fluid mechanics, and electrical engineering.
+    </p>
+</section>
+
+<section id="pretest">
+    <h2>Pre-Test</h2>
+    <p><b>1. Which condition defines an exact differential equation?</b></p>
+    <p>a) ∂M/∂x = ∂N/∂y<br>
+       <b>b) ∂M/∂y = ∂N/∂x (Correct)</b><br>
+       c) M = N<br>
+       d) dy/dx = M/N</p>
+
+    <p><b>2. For the equation (2x+y)dx + (x+2y)dy = 0, is it exact?</b></p>
+    <p>a) Yes<br>
+       <b>b) No (Correct, since ∂M/∂y = 1 ≠ 2 = ∂N/∂x)</b></p>
+
+    <p><b>3. Integrating factor depending only on x satisfies:</b></p>
+    <p><b>a) (∂M/∂y − ∂N/∂x)/N = f(x) (Correct)</b></p>
+</section>
+
+<section id="procedure">
+    <h2>Procedure</h2>
+    <ol>
+        <li>Input the functions M(x,y) and N(x,y).</li>
+        <li>Compute ∂M/∂y and ∂N/∂x.</li>
+        <li>If ∂M/∂y = ∂N/∂x, the equation is exact.</li>
+        <li>Integrate M with respect to x to obtain F(x,y).</li>
+        <li>Add the missing function of y by comparing with N.</li>
+        <li>If non-exact, test for integrating factor μ(x) using
+            (∂M/∂y − ∂N/∂x)/N.</li>
+        <li>Similarly test μ(y) using (∂N/∂x − ∂M/∂y)/M.</li>
+        <li>Multiply by μ and solve as an exact equation.</li>
+        <li>Display the solution F(x,y) = C.</li>
+    </ol>
+</section>
+
+<section id="simulation" class="simulation">
+    <h2>Simulation</h2>
+    <p>Enter M(x,y) and N(x,y):</p>
+    <input type="text" id="M" placeholder="M(x,y) e.g. x*y + y">
+    <br>
+    <input type="text" id="N" placeholder="N(x,y) e.g. x*x + x">
+    <br>
+    <button onclick="checkExactness()">Check Exactness</button>
+
+    <div class="result" id="output"></div>
+</section>
+
+<section id="posttest">
+    <h2>Post-Test</h2>
+    <p><b>1. Solve ydx + (x + ln y)dy = 0. Integrating factor?</b></p>
+    <p><b>a) μ = 1/y (Correct)</b></p>
+
+    <p><b>2. General solution form?</b></p>
+    <p>F(x,y) = C</p>
+</section>
+
+<section id="references">
+    <h2>References</h2>
+    <ul>
+        <li>Erwin Kreyszig – Advanced Engineering Mathematics</li>
+        <li>B.S. Grewal – Higher Engineering Mathematics</li>
+        <li>MIT OpenCourseWare – Differential Equations</li>
+        <li>NPTEL Mathematics Lecture Series</li>
+    </ul>
+</section>
+
+<section id="contributors">
+    <h2>Contributors</h2>
+    <p><b>Guide:</b> Mr. Dinesh Kute<br>
+       Assistant Professor,<br>
+       Department of Applied Mathematics & Humanities,<br>
+       Pimpri Chinchwad College of Engineering (PCCOE), Pune</p>
+
+    <p><b>Student Developer(s):</b><br>
+       Disha Patharkar – PRN: 125B1F259<br>
+       Diya Bhansali – PRN: 125B1F271<br>
+       Prachi Jadhav – PRN: 125B1F273<br>
+       Khushi Kolhe – PRN: 125B1F275
+    </p>
+</section>
+
+<footer>
+    © PCCOE Virtual Lab | Exact Differential Equations
+</footer>
+
+<script>
+function showTab(id){
+    document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+    event.target.classList.add("active");
+    document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+}
+
+function checkExactness(){
+    try{
+        const M = document.getElementById("M").value;
+        const N = document.getElementById("N").value;
+
+        const dMdy = math.derivative(M, 'y').toString();
+        const dNdx = math.derivative(N, 'x').toString();
+
+        let result = "∂M/∂y = " + dMdy + "<br>∂N/∂x = " + dNdx + "<br>";
+
+        if(dMdy === dNdx){
+            result += "<span style='color:green'>The equation is EXACT.</span>";
+        }else{
+            result += "<span style='color:red'>The equation is NOT EXACT.</span>";
+        }
+        document.getElementById("output").innerHTML = result;
+    }catch(e){
+        document.getElementById("output").innerHTML =
+            "<span style='color:red'>Invalid input. Please check expressions.</span>";
+    }
+}
+</script>
+
+</body>
+</html>
